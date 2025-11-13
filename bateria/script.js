@@ -7,9 +7,22 @@ document.querySelector('.composer button').addEventListener('click', () => {
     
     if(song !== ''){
         let songArray = song.split('');
-        console.log(songArray);
+        playComposition(songArray);
     }
 });
+
+function playComposition(songArray) {
+    let wait = 0;
+
+    for(let songItem of songArray) { //loop dentro do array, percorre todo item do array
+        
+        setTimeout(()=>{
+            playSound(`key${songItem}`);
+        }, wait);
+        
+        wait += 250;
+    }
+}
 
 function playSound(sound) {
     let audioElement = document.querySelector(`#s_${sound}`);

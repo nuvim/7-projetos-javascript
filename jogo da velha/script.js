@@ -13,7 +13,20 @@ reset();
 // Eventos
 document.querySelector('.reset').addEventListener('click', reset); // serve para reiniciar o jogo
 
+document.querySelectorAll('.item').forEach(item => {
+    item.addEventListener('click', itemClick);
+}); // adiciona o evento de clique para todos os itens ao inves de adicionar um por um, ele percorre todos os elementos com a classe item e adiciona o evento de clique
+
+
 // Funções
+
+function itemClick(event) {
+    let item = event.target.getAttribute('data-item');
+    if(square[item] === '') {
+        square[item] = player;
+        renderSquare();
+    }
+}
 
 function reset() {
     warning = '';
@@ -27,7 +40,7 @@ function reset() {
 
    // podemos fazer assim também:
    let random = Math.floor(Math.random() * 2); // aqui ele escolhe aleatoriamente quem começa
-   player = (random() === 0) ? 'x' : 'o'; // operador ternário para definir quem começa o jogo , os tres sinais de igual são para comparar valor e tipo
+   player = (random === 0) ? 'x' : 'o'; // operador ternário para definir quem começa o jogo , os tres sinais de igual são para comparar valor e tipo
 
    for(let i in square) { // for let i in square significa que para cada posição em square faça...
         square[i] = ''; // limpa o square
@@ -41,6 +54,18 @@ function reset() {
 
 function renderSquare() {
     for(let i in square) {
-        console.log(i);
+        let item = document.querySelector(`div[data-item=${i}]`);
+        item.innerHTML= square[i];
     }
+}
+
+function renderInfo() {
+    document.querySelector('.vez').innerHTML = player;
+    document.querySelector('.resultado').innerHTML = warning;
+}
+
+// 29:45
+
+function togglePlayer() {
+    
 }

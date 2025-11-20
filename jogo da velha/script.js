@@ -21,10 +21,13 @@ document.querySelectorAll('.item').forEach(item => {
 // Funções
 
 function itemClick(event) {
+    if(!playing) return; // não permita jogadas se o jogo acabou
     let item = event.target.getAttribute('data-item');
     if(square[item] === '') {
-        square[item] = player;
-        renderSquare();
+        square[item] = player; 
+        renderSquare();          // atualiza o tabuleiro
+        checkGame();             // verifica vitória/empate e possivelmente seta `playing = false`
+        if(playing) togglePlayer(); // só alterna se ninguém venceu
     }
 }
 
@@ -64,8 +67,73 @@ function renderInfo() {
     document.querySelector('.resultado').innerHTML = warning;
 }
 
-// 29:45
 
 function togglePlayer() {
+    //if(player === 'x') {
+     //   player = 'o';
+   // } else{
+    //    player = 'x';
+    //}
+
+    player = (player === 'x') ? 'o' : 'x'; // operador ternário para trocar o jogador
+    renderInfo();
+}
+
+function checkGame() {
     
+    if(checkWinnerFor('x')) { 
+        warning = 'O "x" venceu!';
+        playing = false;
+    }else if(checkWinnerFor('o')) {
+        warning = 'O "o" venceu!';
+        playing = false;
+    }else if(isFull()) { //isfull verifica se o tabuleiro está cheio
+        warning = 'Deu empate!';
+        playing = false;
+    } 
+    
+    if (!playing) {
+        renderInfo();
+    } // atualiza as informações se o jogo acabou
+
+}
+
+function checkWinnerFor(player) {
+    let pos = ['a1,a2,a3',
+               'b1,b2,b3',
+               'c1,c2,c3', // linhas
+                
+               'a1,b1,c1',
+               'a2,b2,c2',
+               'a3,b3,c3', // colunas
+               
+               'a1,b2,c3',
+               'a3,b2,c1']; // diagonais
+
+    for(let w in pos) { // pos significa posições
+        let pArray = pos[w].split(','); // split separa a string em um array
+        
+        // pArray.every((option)=> { // every é uma função usada em array que verifica se todos os elementos do array satisfazem a condição
+           // if(square[option] === player) {
+          //      return true;
+        //    } else{
+        //        return false;
+         //   }
+      //  }); 
+
+        let hasWon = pArray.every(option => square[option] === player); // arrow function para verificar se todos os elementos do array são iguais ao jogador atual
+        if(hasWon) {
+            return true;
+        }
+}
+return false;
+}
+
+function isFull() { // logica de verificacao se o tabuleiro está cheio
+    for(let i in square) {
+        if(square[i] === '') {
+            return false;
+        }
+    } 
+    return true;
 }
